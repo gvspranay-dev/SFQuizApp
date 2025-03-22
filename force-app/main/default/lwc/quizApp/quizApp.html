@@ -1,0 +1,59 @@
+<template>
+    <!-- Quiz Entry Screen -->
+    <template if:true={showQuizEntry}>
+        <lightning-card title="Enter Quiz Code">
+            <div class="slds-m-around_medium">
+                <lightning-input label="Quiz Code" value={quizCode} onchange={handleQuizCodeChange}></lightning-input>
+                <lightning-button label="Start Quiz" variant="brand" onclick={startQuiz} class="slds-m-top_medium"></lightning-button>
+            </div>
+        </lightning-card>
+    </template>
+
+    <!-- Quiz Questions Screen -->
+    <template if:true={showQuizQuestions}>
+        <lightning-card title="Quiz">
+            <div class="slds-m-around_medium">
+                <p><strong>Question {displayQuestionNumber} of {totalQuestions}:</strong></p>
+                <p>{currentQuestionText}</p>
+
+                <template for:each={currentOptions} for:item="option">
+                    <div key={option.Id} class="slds-m-vertical_small">
+                        <template if:true={isMultipleChoice}>
+                            <lightning-input type="checkbox"
+                                             label={option.Option_Text__c}
+                                             data-id={option.Id}
+                                             checked={option.isChecked}
+                                             onchange={handleOptionSelect}>
+                            </lightning-input>
+                        </template>
+                        <template if:false={isMultipleChoice}>
+                            <lightning-input type="radio"
+                                             name="singleChoice"
+                                             label={option.Option_Text__c}
+                                             data-id={option.Id}
+                                             checked={option.isChecked}
+                                             onchange={handleOptionSelect}>
+                            </lightning-input>
+                        </template>
+                    </div>
+                </template>
+
+                <div class="slds-m-top_medium">
+                    <lightning-button label="Previous" onclick={prevQuestion} disabled={isFirstQuestion}></lightning-button>
+                    <lightning-button label="Next" onclick={nextQuestion} disabled={isLastQuestion} class="slds-m-left_small"></lightning-button>
+                    <lightning-button label="Submit" onclick={submitQuiz} disabled={isNotLastQuestion} class="slds-m-left_small"></lightning-button>
+                </div>
+            </div>
+        </lightning-card>
+    </template>
+
+    <!-- Quiz Results Screen -->
+    <template if:true={showQuizResults}>
+        <lightning-card title="Quiz Results">
+            <div class="slds-m-around_medium">
+                <p><strong>Your Score:</strong> {score} / {totalQuestions}</p>
+                <lightning-button label="Restart Quiz" onclick={restartQuiz} class="slds-m-top_medium"></lightning-button>
+            </div>
+        </lightning-card>
+    </template>
+</template>
